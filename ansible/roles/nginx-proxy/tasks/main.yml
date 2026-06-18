@@ -1,0 +1,31 @@
+---
+- name: Установка Nginx
+  apt:
+    name: nginx
+    state: present
+    update_cache: yes
+
+- name: Создание конфигурации прокси
+  template:
+    src: proxy.conf.j2
+    dest: /etc/nginx/sites-available/proxy
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Включение сайта прокси
+  file:
+    src: /etc/nginx/sites-available/proxy
+    dest: /etc/nginx/sites-enabled/proxy
+    state: link
+
+- name: Отключение сайта по умолчанию
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+
+- name: Перезапуск Nginx
+  systemd:
+    name: nginx
+    state: restarted
+    enabled: yes

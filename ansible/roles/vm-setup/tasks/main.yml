@@ -1,0 +1,20 @@
+---
+- name: Обновление кэша apt
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Установка необходимых пакетов
+  apt:
+    name:
+      - net-tools
+      - dnsutils
+      - wget
+      - curl
+      - mc
+      - rsync
+    state: present
+
+- name: Установка имени хоста
+  hostname:
+    name: "{{ inventory_hostname }}"
